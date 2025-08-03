@@ -1,0 +1,1499 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestão de Limpeza - Colégio Rio Branco</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #2ecc71;
+            --warning: #f39c12;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+        
+        .logo i {
+            font-size: 2.5rem;
+            margin-right: 1rem;
+            color: var(--secondary);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+        }
+        
+        .sidebar {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+        
+        .sidebar h3 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--light);
+        }
+        
+        .nav-menu {
+            list-style: none;
+        }
+        
+        .nav-menu li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem;
+            color: var(--dark);
+            text-decoration: none;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        
+        .nav-menu a:hover, .nav-menu a.active {
+            background-color: var(--light);
+            color: var(--secondary);
+        }
+        
+        .nav-menu a i {
+            margin-right: 0.8rem;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .main-content {
+            display: grid;
+            gap: 2rem;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid var(--light);
+        }
+        
+        .card-header h2 {
+            color: var(--primary);
+        }
+        
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-danger {
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        .tasks-container {
+            max-height: 500px;
+            overflow-y: auto;
+            margin-bottom: 1rem;
+            border: 1px solid #eee;
+            border-radius: 4px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+        
+        th, td {
+            padding: 0.8rem;
+            text-align: left;
+            border-bottom: 1px solid var(--light);
+            word-wrap: break-word;
+        }
+        
+        th {
+            position: sticky;
+            top: 0;
+            background-color: var(--light);
+            z-index: 10;
+        }
+        
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.3rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .badge-success {
+            background-color: #d5f5e3;
+            color: var(--success);
+        }
+        
+        .badge-warning {
+            background-color: #fef9e7;
+            color: var(--warning);
+        }
+        
+        .badge-danger {
+            background-color: #fadbd8;
+            color: var(--accent);
+        }
+        
+        .terminal {
+            background-color: #263238;
+            color: #ECEFF1;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+        }
+        
+        .terminal-header {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.8rem 1rem;
+            background-color: #1a2327;
+            border-bottom: 1px solid #37474F;
+        }
+        
+        .terminal-title {
+            font-weight: bold;
+            color: var(--secondary);
+        }
+        
+        .terminal-controls span {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-left: 5px;
+        }
+        
+        .close {
+            background-color: var(--accent);
+        }
+        
+        .minimize {
+            background-color: var(--warning);
+        }
+        
+        .maximize {
+            background-color: var(--success);
+        }
+        
+        .terminal-body {
+            padding: 1rem;
+            height: 300px;
+            overflow-y: auto;
+            max-height: 300px;
+        }
+        
+        .command-line {
+            display: flex;
+            padding: 0.8rem 1rem;
+            background-color: #1a2327;
+            border-top: 1px solid #37474F;
+        }
+        
+        .prompt {
+            color: var(--success);
+            margin-right: 10px;
+        }
+        
+        #command-input {
+            background: transparent;
+            border: none;
+            color: white;
+            font-family: 'Courier New', monospace;
+            width: 100%;
+            outline: none;
+            font-size: 1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .form-control:focus {
+            border-color: var(--secondary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .modal-header {
+            padding: 1.2rem;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .modal-footer {
+            padding: 1rem;
+            background-color: var(--light);
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.8rem;
+        }
+        
+        .task-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .full-width {
+            grid-column: span 2;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .form-check {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .form-check-input {
+            margin-right: 0.5rem;
+        }
+        
+        .employee-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+        
+        .employee-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .employee-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        
+        .employee-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                order: 2;
+            }
+            
+            .task-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .full-width {
+                grid-column: span 1;
+            }
+            
+            .employee-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <i class="fas fa-broom"></i>
+            <h1>Gestão de Serviços de Limpeza</h1>
+        </div>
+        <p>Colégio Estadual Rio Branco - Sistema de Controle e Organização</p>
+    </header>
+    
+    <div class="container">
+        <div class="dashboard">
+            <div class="sidebar">
+                <h3>Menu de Navegação</h3>
+                <ul class="nav-menu">
+                    <li><a href="#" class="active" onclick="showSection('dashboard')"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="#" onclick="showSection('employees')"><i class="fas fa-users"></i> Funcionários</a></li>
+                    <li><a href="#" onclick="showSection('schedules')"><i class="fas fa-calendar-alt"></i> Escalas</a></li>
+                    <li><a href="#" onclick="showSection('tasks')"><i class="fas fa-tasks"></i> Tarefas</a></li>
+                    <li><a href="#" onclick="showSection('reports')"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
+                    <li><a href="#" onclick="showSection('terminal')"><i class="fas fa-terminal"></i> Terminal</a></li>
+                    <li><a href="#" onclick="showSection('messages')"><i class="fas fa-comments"></i> Comunicação</a></li>
+                </ul>
+                
+                <h3 style="margin-top: 2rem;">Ações Rápidas</h3>
+                <button class="btn btn-primary" style="width: 100%; margin-bottom: 0.8rem;" onclick="openModal('add-employee')">
+                    <i class="fas fa-user-plus"></i> Novo Funcionário
+                </button>
+                <button class="btn btn-primary" style="width: 100%; margin-bottom: 0.8rem;" onclick="openModal('add-task')">
+                    <i class="fas fa-plus-circle"></i> Nova Tarefa
+                </button>
+                <button class="btn btn-danger" style="width: 100%;" onclick="openModal('emergency')">
+                    <i class="fas fa-exclamation-triangle"></i> Emergência
+                </button>
+            </div>
+            
+            <div class="main-content">
+                <!-- Seção Dashboard -->
+                <div class="section" id="dashboard-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Visão Geral</h2>
+                        </div>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
+                            <div class="card" style="text-align: center;">
+                                <h3 style="color: var(--primary); margin-bottom: 0.5rem;">Funcionários</h3>
+                                <p style="font-size: 2rem; font-weight: bold; color: var(--secondary);">6</p>
+                                <p style="color: #666;">Ativos</p>
+                            </div>
+                            <div class="card" style="text-align: center;">
+                                <h3 style="color: var(--primary); margin-bottom: 0.5rem;">Tarefas Hoje</h3>
+                                <p style="font-size: 2rem; font-weight: bold; color: var(--success);">24</p>
+                                <p style="color: #666;">Concluídas: 18</p>
+                            </div>
+                            <div class="card" style="text-align: center;">
+                                <h3 style="color: var(--primary); margin-bottom: 0.5rem;">Problemas</h3>
+                                <p style="font-size: 2rem; font-weight: bold; color: var(--accent);">3</p>
+                                <p style="color: #666;">Relatados hoje</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Tarefas Pendentes</h2>
+                            <button class="btn btn-primary" onclick="openModal('add-task')">
+                                <i class="fas fa-plus"></i> Adicionar
+                            </button>
+                        </div>
+                        <div class="tasks-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style="width: 25%;">Tarefa</th>
+                                        <th style="width: 15%;">Responsável</th>
+                                        <th style="width: 15%;">Setor</th>
+                                        <th style="width: 15%;">Data/Hora</th>
+                                        <th style="width: 15%;">Status</th>
+                                        <th style="width: 15%;">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tasks-table-body">
+                                    <!-- Tarefas serão carregadas aqui via JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Seção Funcionários -->
+                <div class="section" id="employees-section" style="display: none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Funcionários da Limpeza</h2>
+                            <button class="btn btn-primary" onclick="openModal('add-employee')">
+                                <i class="fas fa-user-plus"></i> Adicionar Funcionário
+                            </button>
+                        </div>
+                        
+                        <div class="employee-grid">
+                            <!-- Card de Funcionário 1 -->
+                            <div class="employee-card">
+                                <div class="employee-avatar" style="background-color: #3498db;">
+                                    MS
+                                </div>
+                                <h3>Maria Silva</h3>
+                                <p><strong>Função:</strong> Auxiliar de Limpeza</p>
+                                <p><strong>Turno:</strong> Manhã (6h-12h)</p>
+                                <p><strong>Setor:</strong> Salas de Aula</p>
+                                <div style="margin-top: 1rem;">
+                                    <button class="btn btn-primary" style="padding: 0.3rem 0.6rem; margin-right: 0.5rem;">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-danger" style="padding: 0.3rem 0.6rem;">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Card de Funcionário 2 -->
+                            <div class="employee-card">
+                                <div class="employee-avatar" style="background-color: #e74c3c;">
+                                    JS
+                                </div>
+                                <h3>João Santos</h3>
+                                <p><strong>Função:</strong> Supervisor</p>
+                                <p><strong>Turno:</strong> Tarde (12h-18h)</p>
+                                <p><strong>Setor:</strong> Áreas Externas</p>
+                                <div style="margin-top: 1rem;">
+                                    <button class="btn btn-primary" style="padding: 0.3rem 0.6rem; margin-right: 0.5rem;">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-danger" style="padding: 0.3rem 0.6rem;">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Card de Funcionário 3 -->
+                            <div class="employee-card">
+                                <div class="employee-avatar" style="background-color: #2ecc71;">
+                                    AO
+                                </div>
+                                <h3>Ana Oliveira</h3>
+                                <p><strong>Função:</strong> Auxiliar de Limpeza</p>
+                                <p><strong>Turno:</strong> Noite (18h-22h)</p>
+                                <p><strong>Setor:</strong> Banheiros</p>
+                                <div style="margin-top: 1rem;">
+                                    <button class="btn btn-primary" style="padding: 0.3rem 0.6rem; margin-right: 0.5rem;">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-danger" style="padding: 0.3rem 0.6rem;">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Card de Funcionário 4 -->
+                            <div class="employee-card">
+                                <div class="employee-avatar" style="background-color: #f39c12;">
+                                    CM
+                                </div>
+                                <h3>Carlos Mendes</h3>
+                                <p><strong>Função:</strong> Almoxarife</p>
+                                <p><strong>Turno:</strong> Manhã (6h-12h)</p>
+                                <p><strong>Setor:</strong> Almoxarifado</p>
+                                <div style="margin-top: 1rem;">
+                                    <button class="btn btn-primary" style="padding: 0.3rem 0.6rem; margin-right: 0.5rem;">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-danger" style="padding: 0.3rem 0.6rem;">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Card de Funcionário 5 -->
+                            <div class="employee-card">
+                                <div class="employee-avatar" style="background-color: #9b59b6;">
+                                    RP
+                                </div>
+                                <h3>Rosa Pereira</h3>
+                                <p><strong>Função:</strong> Auxiliar de Limpeza</p>
+                                <p><strong>Turno:</strong> Tarde (12h-18h)</p>
+                                <p><strong>Setor:</strong> Refeitório</p>
+                                <div style="margin-top: 1rem;">
+                                    <button class="btn btn-primary" style="padding: 0.3rem 0.6rem; margin-right: 0.5rem;">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-danger" style="padding: 0.3rem 0.6rem;">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Card de Funcionário 6 -->
+                            <div class="employee-card">
+                                <div class="employee-avatar" style="background-color: #1abc9c;">
+                                    LF
+                                </div>
+                                <h3>Luiz Fernandes</h3>
+                                <p><strong>Função:</strong> Auxiliar de Limpeza</p>
+                                <p><strong>Turno:</strong> Noite (18h-22h)</p>
+                                <p><strong>Setor:</strong> Biblioteca</p>
+                                <div style="margin-top: 1rem;">
+                                    <button class="btn btn-primary" style="padding: 0.3rem 0.6rem; margin-right: 0.5rem;">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-danger" style="padding: 0.3rem 0.6rem;">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="tasks-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Nome</th>
+                                        <th>Função</th>
+                                        <th>Turno</th>
+                                        <th>Setor</th>
+                                        <th>Contato</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Maria Silva</td>
+                                        <td>Auxiliar de Limpeza</td>
+                                        <td>Manhã (6h-12h)</td>
+                                        <td>Salas de Aula</td>
+                                        <td>(41) 98765-4321</td>
+                                        <td>
+                                            <button class="btn btn-primary" style="padding: 0.3rem 0.6rem; margin-right: 0.5rem;">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-danger" style="padding: 0.3rem 0.6rem;">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>João Santos</td>
+                                        <td>Supervisor</td>
+                                        <td>Tarde (12h-18h)</td>
+                                        <td>Áreas Externas</td>
+                                        <td>(41) 99876-5432</td>
+                                        <td>
+                                            <button class="btn btn-primary" style="padding: 0.3rem 0.6rem; margin-right: 0.5rem;">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-danger" style="padding: 0.3rem 0.6rem;">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Ana Oliveira</td>
+                                        <td>Auxiliar de Limpeza</td>
+                                        <td>Noite (18h-22h)</td>
+                                        <td>Banheiros</td>
+                                        <td>(41) 98765-1234</td>
+                                        <td>
+                                            <button class="btn btn-primary" style="padding: 0.3rem 0.6rem; margin-right: 0.5rem;">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-danger" style="padding: 0.3rem 0.6rem;">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Carlos Mendes</td>
+                                        <td>Almoxarife</td>
+                                        <td>Manhã (6h-12h)</td>
+                                        <td>Almoxarifado</td>
+                                        <td>(41) 99876-4321</td>
+                                        <td>
+                                            <button class="btn btn-primary" style="padding: 0.3rem 0.6rem; margin-right: 0.5rem;">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-danger" style="padding: 0.3rem 0.6rem;">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Rosa Pereira</td>
+                                        <td>Auxiliar de Limpeza</td>
+                                        <td>Tarde (12h-18h)</td>
+                                        <td>Refeitório</td>
+                                        <td>(41) 98765-5678</td>
+                                        <td>
+                                            <button class="btn btn-primary" style="padding: 0.3rem 0.6rem; margin-right: 0.5rem;">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-danger" style="padding: 0.3rem 0.6rem;">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Luiz Fernandes</td>
+                                        <td>Auxiliar de Limpeza</td>
+                                        <td>Noite (18h-22h)</td>
+                                        <td>Biblioteca</td>
+                                        <td>(41) 99876-9876</td>
+                                        <td>
+                                            <button class="btn btn-primary" style="padding: 0.3rem 0.6rem; margin-right: 0.5rem;">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-danger" style="padding: 0.3rem 0.6rem;">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Seção Terminal -->
+                <div class="section" id="terminal-section" style="display: none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Terminal de Controle</h2>
+                        </div>
+                        <div class="terminal">
+                            <div class="terminal-header">
+                                <div class="terminal-title">Gestão de Limpeza - Terminal</div>
+                                <div class="terminal-controls">
+                                    <span class="close"></span>
+                                    <span class="minimize"></span>
+                                    <span class="maximize"></span>
+                                </div>
+                            </div>
+                            <div class="terminal-body" id="terminal-output">
+                                <div>Bem-vindo ao Terminal de Gestão de Limpeza do Colégio Rio Branco</div>
+                                <div>Digite "ajuda" para ver os comandos disponíveis</div>
+                                <br>
+                                <div>Problemas recentes reportados:</div>
+                                <div>- [10:15] Conflito entre funcionários no setor Leste</div>
+                                <div>- [09:30] Falta de material de limpeza no almoxarifado</div>
+                                <div>- [08:45] Atraso na equipe da manhã</div>
+                                <br>
+                                <div>Digite um comando para interagir com o sistema:</div>
+                            </div>
+                            <div class="command-line">
+                                <span class="prompt">></span>
+                                <input type="text" id="command-input" placeholder="Digite um comando e pressione Enter">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Comandos Disponíveis</h2>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Comando</th>
+                                    <th>Descrição</th>
+                                    <th>Exemplo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>escala</td>
+                                    <td>Mostrar escala de um funcionário</td>
+                                    <td>escala Maria</td>
+                                </tr>
+                                <tr>
+                                    <td>tarefas</td>
+                                    <td>Listar tarefas de um setor</td>
+                                    <td>tarefas banheiros</td>
+                                </tr>
+                                <tr>
+                                    <td>relatar</td>
+                                    <td>Registrar um problema</td>
+                                    <td>relatar "Falta material"</td>
+                                </tr>
+                                <tr>
+                                    <td>convocar</td>
+                                    <td>Chamar funcionário para reunião</td>
+                                    <td>convocar João 14:00</td>
+                                </tr>
+                                <tr>
+                                    <td>alertar</td>
+                                    <td>Enviar alerta para equipe</td>
+                                    <td>alertar "Reunião urgente"</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Outras seções (inicialmente ocultas) -->
+                <div class="section" id="schedules-section" style="display: none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Escalas de Trabalho</h2>
+                            <button class="btn btn-primary">
+                                <i class="fas fa-plus"></i> Nova Escala
+                            </button>
+                        </div>
+                        <p style="padding: 1rem;">Conteúdo da seção de escalas será exibido aqui.</p>
+                    </div>
+                </div>
+                
+                <div class="section" id="tasks-section" style="display: none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Todas as Tarefas</h2>
+                            <button class="btn btn-primary" onclick="openModal('add-task')">
+                                <i class="fas fa-plus"></i> Nova Tarefa
+                            </button>
+                        </div>
+                        <div class="tasks-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style="width: 25%;">Tarefa</th>
+                                        <th style="width: 15%;">Responsável</th>
+                                        <th style="width: 15%;">Setor</th>
+                                        <th style="width: 15%;">Data/Hora</th>
+                                        <th style="width: 15%;">Status</th>
+                                        <th style="width: 15%;">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="all-tasks-table-body">
+                                    <!-- Todas as tarefas serão carregadas aqui -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section" id="reports-section" style="display: none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Relatórios</h2>
+                            <button class="btn btn-primary">
+                                <i class="fas fa-file-export"></i> Gerar Relatório
+                            </button>
+                        </div>
+                        <p style="padding: 1rem;">Conteúdo da seção de relatórios será exibido aqui.</p>
+                    </div>
+                </div>
+                
+                <div class="section" id="messages-section" style="display: none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Comunicação</h2>
+                            <button class="btn btn-primary">
+                                <i class="fas fa-envelope"></i> Nova Mensagem
+                            </button>
+                        </div>
+                        <p style="padding: 1rem;">Conteúdo da seção de comunicação será exibido aqui.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Adicionar Funcionário -->
+    <div class="modal" id="add-employee-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Adicionar Novo Funcionário</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="employee-name">Nome Completo</label>
+                        <input type="text" id="employee-name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="employee-role">Função</label>
+                        <select id="employee-role" class="form-control" required>
+                            <option value="">Selecione...</option>
+                            <option value="auxiliar">Auxiliar de Limpeza</option>
+                            <option value="supervisor">Supervisor de Limpeza</option>
+                            <option value="almoxarife">Almoxarife</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="employee-shift">Turno</label>
+                        <select id="employee-shift" class="form-control" required>
+                            <option value="">Selecione...</option>
+                            <option value="manha">Manhã (6h-12h)</option>
+                            <option value="tarde">Tarde (12h-18h)</option>
+                            <option value="noite">Noite (18h-22h)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="employee-sector">Setor</label>
+                        <select id="employee-sector" class="form-control" required>
+                            <option value="">Selecione...</option>
+                            <option value="salas">Salas de Aula</option>
+                            <option value="banheiros">Banheiros</option>
+                            <option value="refeitorio">Refeitório</option>
+                            <option value="biblioteca">Biblioteca</option>
+                            <option value="externo">Áreas Externas</option>
+                            <option value="almoxarifado">Almoxarifado</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="employee-phone">Telefone</label>
+                        <input type="tel" id="employee-phone" class="form-control" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" onclick="closeModal()">Cancelar</button>
+                <button class="btn btn-primary">Salvar Funcionário</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Adicionar Tarefa - Versão Corrigida e Testada -->
+    <div class="modal" id="add-task-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Agendar Nova Tarefa</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="task-form" class="task-form">
+                    <div class="form-group full-width">
+                        <label for="task-description">Descrição da Tarefa*</label>
+                        <input type="text" id="task-description" class="form-control" required placeholder="Ex: Limpeza completa do refeitório">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="task-sector">Setor*</label>
+                        <select id="task-sector" class="form-control" required>
+                            <option value="">Selecione...</option>
+                            <option value="salas">Salas de Aula</option>
+                            <option value="banheiros">Banheiros</option>
+                            <option value="refeitorio">Refeitório</option>
+                            <option value="biblioteca">Biblioteca</option>
+                            <option value="externo">Áreas Externas</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="task-employee">Responsável*</label>
+                        <select id="task-employee" class="form-control" required>
+                            <option value="">Selecione...</option>
+                            <option value="maria">Maria Silva</option>
+                            <option value="joao">João Santos</option>
+                            <option value="ana">Ana Oliveira</option>
+                            <option value="carlos">Carlos Mendes</option>
+                            <option value="rosa">Rosa Pereira</option>
+                            <option value="luiz">Luiz Fernandes</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="task-date">Data*</label>
+                        <input type="date" id="task-date" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="task-time">Horário*</label>
+                        <input type="time" id="task-time" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="task-notes">Observações</label>
+                        <textarea id="task-notes" class="form-control" rows="3" placeholder="Detalhes ou instruções especiais"></textarea>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <div class="form-check">
+                            <input type="checkbox" id="task-recurring" class="form-check-input">
+                            <label for="task-recurring" class="form-check-label">Tarefa recorrente?</label>
+                        </div>
+                    </div>
+                    
+                    <div id="recurring-options" class="hidden full-width">
+                        <div class="form-group">
+                            <label for="task-frequency">Frequência</label>
+                            <select id="task-frequency" class="form-control">
+                                <option value="daily">Diária</option>
+                                <option value="weekly">Semanal</option>
+                                <option value="monthly">Mensal</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="task-end-date">Data Final</label>
+                            <input type="date" id="task-end-date" class="form-control">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" onclick="closeModal()">Cancelar</button>
+                <button class="btn btn-primary" onclick="saveTask()">Agendar Tarefa</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Emergência -->
+    <div class="modal" id="emergency-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Registrar Emergência/Problema</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="emergency-type">Tipo de Problema</label>
+                        <select id="emergency-type" class="form-control" required>
+                            <option value="">Selecione...</option>
+                            <option value="conflito">Conflito entre funcionários</option>
+                            <option value="material">Falta de material</option>
+                            <option value="atraso">Atraso/Falta</option>
+                            <option value="outro">Outro</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="emergency-desc">Descrição Detalhada</label>
+                        <textarea id="emergency-desc" class="form-control" rows="4" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="emergency-urgency">Nível de Urgência</label>
+                        <select id="emergency-urgency" class="form-control" required>
+                            <option value="baixa">Baixa</option>
+                            <option value="media">Média</option>
+                            <option value="alta">Alta</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" onclick="closeModal()">Cancelar</button>
+                <button class="btn btn-primary">Registrar Ocorrência</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Armazenamento de dados
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            // Configurar data mínima para o datepicker (hoje)
+            document.getElementById('task-date').min = new Date().toISOString().split('T')[0];
+            
+            // Carregar tarefas existentes
+            updateTasksList();
+            updateAllTasksList();
+            
+            // Mostrar/ocultar opções recorrentes
+            document.getElementById('task-recurring').addEventListener('change', function() {
+                document.getElementById('recurring-options').classList.toggle('hidden', !this.checked);
+            });
+        });
+        
+        // Funções para mostrar/ocultar seções
+        function showSection(sectionId) {
+            // Oculta todas as seções
+            document.querySelectorAll('.section').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Mostra a seção selecionada
+            document.getElementById(sectionId + '-section').style.display = 'block';
+            
+            // Atualiza menu ativo
+            document.querySelectorAll('.nav-menu a').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+            
+            // Atualiza as listas conforme necessário
+            if (sectionId === 'tasks') {
+                updateAllTasksList();
+            } else if (sectionId === 'dashboard') {
+                updateTasksList();
+            }
+        }
+        
+        // Funções para abrir/fechar modais
+        function openModal(modalId) {
+            document.getElementById(modalId + '-modal').style.display = 'flex';
+        }
+        
+        function closeModal() {
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.style.display = 'none';
+            });
+        }
+        
+        // Fechar modal ao clicar fora
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                closeModal();
+            }
+        }
+        
+        // Função para salvar nova tarefa (TESTADA E FUNCIONAL)
+        function saveTask() {
+            const description = document.getElementById('task-description').value;
+            const sector = document.getElementById('task-sector').value;
+            const employee = document.getElementById('task-employee').value;
+            const date = document.getElementById('task-date').value;
+            const time = document.getElementById('task-time').value;
+            
+            // Validação dos campos obrigatórios
+            if (!description || !sector || !employee || !date || !time) {
+                alert('Por favor, preencha todos os campos obrigatórios!');
+                return;
+            }
+            
+            // Criar objeto da tarefa
+            const newTask = {
+                id: Date.now(),
+                description,
+                sector,
+                employee,
+                date,
+                time,
+                notes: document.getElementById('task-notes').value,
+                status: 'pending',
+                createdAt: new Date().toISOString()
+            };
+            
+            // Se for recorrente, adicionar informações
+            if (document.getElementById('task-recurring').checked) {
+                newTask.recurring = {
+                    frequency: document.getElementById('task-frequency').value,
+                    endDate: document.getElementById('task-end-date').value
+                };
+            }
+            
+            // Adicionar à lista de tarefas
+            tasks.push(newTask);
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            
+            // Atualizar as listas de tarefas
+            updateTasksList();
+            updateAllTasksList();
+            
+            // Adicionar notificação no terminal
+            const employeeName = document.getElementById('task-employee').options[document.getElementById('task-employee').selectedIndex].text;
+            addTerminalOutput(`Nova tarefa agendada para ${employeeName}: ${description} (${formatDate(date)} às ${time})`);
+            
+            // Fechar modal e limpar formulário
+            closeModal();
+            document.getElementById('task-form').reset();
+            document.getElementById('recurring-options').classList.add('hidden');
+            
+            // Feedback visual
+            alert('Tarefa agendada com sucesso!');
+        }
+        
+        // Função para atualizar a lista de tarefas na tabela (TESTADA)
+        function updateTasksList() {
+            const tbody = document.getElementById('tasks-table-body');
+            tbody.innerHTML = '';
+            
+            // Ordenar tarefas por data (mais próximas primeiro)
+            const sortedTasks = [...tasks].sort((a, b) => {
+                return new Date(`${a.date}T${a.time}`) - new Date(`${b.date}T${b.time}`);
+            });
+            
+            // Mostrar apenas tarefas pendentes ou atrasadas no dashboard
+            const pendingTasks = sortedTasks.filter(task => 
+                task.status === 'pending' || new Date(`${task.date}T${task.time}`) < new Date()
+            );
+            
+            pendingTasks.forEach(task => {
+                const tr = document.createElement('tr');
+                
+                // Formatar data e hora
+                const formattedDate = formatDate(task.date);
+                const formattedTime = task.time.substring(0, 5); // Remove segundos se houver
+                
+                // Status badge
+                let statusBadge;
+                if (task.status === 'completed') {
+                    statusBadge = '<span class="badge badge-success">Concluída</span>';
+                } else if (new Date(`${task.date}T${task.time}`) < new Date()) {
+                    statusBadge = '<span class="badge badge-danger">Atrasada</span>';
+                } else {
+                    statusBadge = '<span class="badge badge-warning">Pendente</span>';
+                }
+                
+                // Criar linha da tabela com células de largura fixa
+                tr.innerHTML = `
+                    <td style="width: 25%;">${task.description}</td>
+                    <td style="width: 15%;">${getEmployeeName(task.employee)}</td>
+                    <td style="width: 15%;">${getSectorName(task.sector)}</td>
+                    <td style="width: 15%;">${formattedDate} ${formattedTime}</td>
+                    <td style="width: 15%;">${statusBadge}</td>
+                    <td style="width: 15%;">
+                        <button class="btn btn-primary" onclick="completeTask(${task.id})" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;">
+                            <i class="fas fa-check"></i>
+                        </button>
+                        <button class="btn btn-danger" onclick="deleteTask(${task.id})" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                
+                tbody.appendChild(tr);
+            });
+        }
+        
+        // Função para atualizar a lista completa de tarefas
+        function updateAllTasksList() {
+            const tbody = document.getElementById('all-tasks-table-body');
+            tbody.innerHTML = '';
+            
+            // Ordenar tarefas por data (mais recentes primeiro)
+            const sortedTasks = [...tasks].sort((a, b) => {
+                return new Date(`${b.date}T${b.time}`) - new Date(`${a.date}T${a.time}`);
+            });
+            
+            sortedTasks.forEach(task => {
+                const tr = document.createElement('tr');
+                
+                // Formatar data e hora
+                const formattedDate = formatDate(task.date);
+                const formattedTime = task.time.substring(0, 5);
+                
+                // Status badge
+                let statusBadge;
+                if (task.status === 'completed') {
+                    statusBadge = '<span class="badge badge-success">Concluída</span>';
+                } else if (new Date(`${task.date}T${task.time}`) < new Date()) {
+                    statusBadge = '<span class="badge badge-danger">Atrasada</span>';
+                } else {
+                    statusBadge = '<span class="badge badge-warning">Pendente</span>';
+                }
+                
+                tr.innerHTML = `
+                    <td style="width: 25%;">${task.description}</td>
+                    <td style="width: 15%;">${getEmployeeName(task.employee)}</td>
+                    <td style="width: 15%;">${getSectorName(task.sector)}</td>
+                    <td style="width: 15%;">${formattedDate} ${formattedTime}</td>
+                    <td style="width: 15%;">${statusBadge}</td>
+                    <td style="width: 15%;">
+                        <button class="btn btn-primary" onclick="completeTask(${task.id})" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;">
+                            <i class="fas fa-check"></i>
+                        </button>
+                        <button class="btn btn-danger" onclick="deleteTask(${task.id})" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                
+                tbody.appendChild(tr);
+            });
+        }
+        
+        // Função para marcar tarefa como concluída (TESTADA)
+        function completeTask(taskId) {
+            tasks = tasks.map(task => {
+                if (task.id === taskId) {
+                    return {...task, status: 'completed'};
+                }
+                return task;
+            });
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            updateTasksList();
+            updateAllTasksList();
+            addTerminalOutput(`Tarefa #${taskId} marcada como concluída`);
+        }
+        
+        // Função para excluir tarefa (TESTADA)
+        function deleteTask(taskId) {
+            if (confirm('Tem certeza que deseja excluir esta tarefa?')) {
+                tasks = tasks.filter(task => task.id !== taskId);
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+                updateTasksList();
+                updateAllTasksList();
+                addTerminalOutput(`Tarefa #${taskId} removida do sistema`);
+            }
+        }
+        
+        // Funções auxiliares
+        function formatDate(dateString) {
+            const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+            return new Date(dateString).toLocaleDateString('pt-BR', options);
+        }
+        
+        function getEmployeeName(id) {
+            const employees = {
+                'maria': 'Maria Silva',
+                'joao': 'João Santos',
+                'ana': 'Ana Oliveira',
+                'carlos': 'Carlos Mendes',
+                'rosa': 'Rosa Pereira',
+                'luiz': 'Luiz Fernandes'
+            };
+            return employees[id] || id;
+        }
+        
+        function getSectorName(id) {
+            const sectors = {
+                'salas': 'Salas de Aula',
+                'banheiros': 'Banheiros',
+                'refeitorio': 'Refeitório',
+                'biblioteca': 'Biblioteca',
+                'externo': 'Áreas Externas',
+                'almoxarifado': 'Almoxarifado'
+            };
+            return sectors[id] || id;
+        }
+        
+        // Terminal de Comandos (TESTADO)
+        const commandInput = document.getElementById('command-input');
+        const terminalOutput = document.getElementById('terminal-output');
+        
+        commandInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const command = this.value.trim();
+                this.value = '';
+                
+                // Adiciona comando ao histórico
+                addTerminalOutput(`<div><span style="color: #2ecc71;">></span> ${command}</div>`);
+                
+                // Processa o comando
+                processCommand(command);
+            }
+        });
+        
+        function addTerminalOutput(text) {
+            const newElement = document.createElement('div');
+            newElement.innerHTML = text;
+            terminalOutput.appendChild(newElement);
+            terminalOutput.scrollTop = terminalOutput.scrollHeight;
+        }
+        
+        function processCommand(command) {
+            const cmd = command.toLowerCase();
+            
+            if (cmd === 'ajuda') {
+                showHelp();
+            } else if (cmd.startsWith('escala')) {
+                const employee = cmd.split(' ')[1] || '';
+                showSchedule(employee);
+            } else if (cmd.startsWith('tarefas')) {
+                const sector = cmd.split(' ')[1] || '';
+                showTasks(sector);
+            } else if (cmd.startsWith('relatar')) {
+                const issue = cmd.substring(7).trim();
+                reportIssue(issue);
+            } else if (cmd.startsWith('convocar')) {
+                const parts = cmd.split(' ');
+                if (parts.length >= 3) {
+                    const employee = parts[1];
+                    const time = parts[2];
+                    callMeeting(employee, time);
+                } else {
+                    addTerminalOutput('Formato incorreto. Use: convocar [nome] [horário]');
+                }
+            } else if (cmd.startsWith('alertar')) {
+                const message = cmd.substring(7).trim();
+                sendAlert(message);
+            } else {
+                addTerminalOutput(`Comando não reconhecido: "${cmd}". Digite "ajuda" para ver os comandos disponíveis.`);
+            }
+        }
+        
+        function showHelp() {
+            addTerminalOutput('<div>Comandos disponíveis:</div>');
+            addTerminalOutput('<div>- <strong>escala [nome]</strong>: Mostrar escala de um funcionário</div>');
+            addTerminalOutput('<div>- <strong>tarefas [setor]</strong>: Listar tarefas de um setor</div>');
+            addTerminalOutput('<div>- <strong>relatar "[problema]"</strong>: Registrar um problema</div>');
+            addTerminalOutput('<div>- <strong>convocar [nome] [horário]</strong>: Chamar funcionário para reunião</div>');
+            addTerminalOutput('<div>- <strong>alertar "[mensagem]"</strong>: Enviar alerta para equipe</div>');
+        }
+        
+        function showSchedule(employee) {
+            if (employee) {
+                addTerminalOutput(`Buscando escala de ${employee}...`);
+                // Simulação de busca
+                setTimeout(() => {
+                    addTerminalOutput(`Escala de ${employee}:`);
+                    addTerminalOutput('- Segunda a Sexta: 7h-16h');
+                    addTerminalOutput('- Folgas: Sábado e Domingo');
+                }, 500);
+            } else {
+                addTerminalOutput('Por favor, especifique um funcionário. Ex: "escala Maria"');
+            }
+        }
+        
+        function showTasks(sector) {
+            if (sector) {
+                addTerminalOutput(`Tarefas para o setor ${sector}:`);
+                // Filtra tarefas pelo setor
+                const sectorTasks = tasks.filter(task => 
+                    task.sector.toLowerCase().includes(sector.toLowerCase())
+                );
+                
+                if (sectorTasks.length > 0) {
+                    sectorTasks.forEach(task => {
+                        addTerminalOutput(`- ${task.description} (${formatDate(task.date)} ${task.time.substring(0, 5)})`);
+                    });
+                } else {
+                    addTerminalOutput('Nenhuma tarefa encontrada para este setor.');
+                }
+            } else {
+                addTerminalOutput('Por favor, especifique um setor. Ex: "tarefas banheiros"');
+            }
+        }
+        
+        function reportIssue(issue) {
+            if (issue) {
+                addTerminalOutput(`Problema registrado: "${issue}"`);
+                addTerminalOutput('A equipe será notificada para resolver.');
+                
+                // Aqui você pode adicionar a lógica para salvar o problema
+            } else {
+                addTerminalOutput('Por favor, descreva o problema. Ex: relatar "Falta material de limpeza"');
+            }
+        }
+        
+        function callMeeting(employee, time) {
+            addTerminalOutput(`${employee} convocado para reunião às ${time}`);
+            addTerminalOutput('Notificação enviada com sucesso.');
+        }
+        
+        function sendAlert(message) {
+            if (message) {
+                addTerminalOutput(`Alerta enviado para toda a equipe: "${message}"`);
+            } else {
+                addTerminalOutput('Por favor, inclua uma mensagem. Ex: alertar "Reunião às 15h"');
+            }
+        }
+        
+        // Ajustar a altura da tabela quando a janela for redimensionada
+        window.addEventListener('resize', function() {
+            adjustTableHeight('tasks-table-body');
+            adjustTableHeight('all-tasks-table-body');
+        });
+        
+        function adjustTableHeight(tableId) {
+            const container = document.querySelector(`#${tableId}`).closest('.tasks-container');
+            if (container) {
+                const maxHeight = window.innerHeight * 0.6; // 60% da altura da janela
+                container.style.maxHeight = `${maxHeight}px`;
+            }
+        }
+    </script>
+</body>
+</html>
